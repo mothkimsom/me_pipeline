@@ -1,0 +1,38 @@
+pipeline{
+    agent any
+    environment {
+        Fruit = "Banana"
+        MyServ = ""
+        TEST = ""
+    }
+    stages{
+        stage('Parallel'){
+            environment{
+                MyServ = """${sh(returnStdout: true,script:'cat /etc/hostname')}""".trim()
+                TEST = sh(returnStdout: true,script:'whoami').trim()
+            }
+            parallel{
+                stage("stage-1"){
+                    steps{
+                        echo "$Fruit"
+                        script{
+                            echo "##############"
+                            echo "${MyServ}"
+                            echo "${TEST}"
+                        }
+                    }
+                }
+                stage("stage-2"){
+                    steps{
+                        echo "$Fruit"
+                        script{       
+                            echo "##############"
+                            echo "${MyServ}"
+                            echo "${TEST}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
